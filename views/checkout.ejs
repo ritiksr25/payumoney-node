@@ -25,12 +25,12 @@
 
                 <div class="dv">
                     <span class="text"><label>Product Info:</label></span>
-                    <span><input type="text" id="pinfo" name="productinfo" placeholder="Product Info" value="" /></span>
+                    <span><input type="text" id="productinfo" name="productinfo" placeholder="Product Info" value="" /></span>
                 </div>
 
                 <div class="dv">
                     <span class="text"><label>Name:</label></span>
-                    <span><input type="text" id="fname" name="firstname" placeholder="First Name" value="" /></span>
+                    <span><input type="text" id="firstname" name="firstname" placeholder="First Name" value="" /></span>
                 </div>
 
                 <div class="dv">
@@ -40,7 +40,7 @@
 
                 <div class="dv">
                     <span class="text"><label>Mobile Number:</label></span>
-                    <span><input type="text" id="mobile" name="phone" placeholder="Mobile/Cell Number"
+                    <span><input type="text" id="phone" name="phone" placeholder="Mobile/Cell Number"
                             value="" /></span>
                 </div>
 
@@ -66,8 +66,8 @@
                     }),
                     contentType: "application/json",
                     dataType: 'json',
-                    success: function (data) {
-                        $('#hash').val(data.hash);
+                    success: function (hash) {
+                        $('#hash').val(hash);
                     }
                 });
             });
@@ -88,7 +88,8 @@
                     surl: $('#surl').val(),
                     furl: $('#furl').val(),
                     mode: "dropout"
-                }, {
+                },
+                {
                     responseHandler: function (BOLT) {
                         if (BOLT.response.txnStatus != 'CANCEL') {
                             //Salt is passd here for demo purpose only. For practical use keep salt at server side only.

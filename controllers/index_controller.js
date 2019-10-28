@@ -27,10 +27,9 @@ module.exports.getDetails = (req, res) => {
 	let cryp = crypto.createHash(sha, hashSequence);
 	cryp.update(hashSequence);
     let hash = cryp.digest("hex");
-    console.log(hash);
 	res.setHeader("Content-Type", "text/json");
 	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.json({ data: hash });
+	res.json(hash);
 };
 
 module.exports.response = async (req, res) => {

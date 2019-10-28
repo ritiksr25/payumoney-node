@@ -1,0 +1,55 @@
+<% include ./partials/head %>
+<div class="row">
+    <div class="col-lg-12 mx-auto">
+        <div class="card mt-4 mx-auto">
+            <a href="#" class="btn btn-primary mt-2" title="Home">Payments History</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">amount</th>
+                        <th scope="col">PayUMoney ID</th>
+                        <th scope="col">Payment Mode</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.forEach(payment => { %>
+                    <tr>
+                        <th scope="row">
+                            <%=payment.txnid%>
+                        </th>
+
+                        <td>
+                            <%=payment.status%>
+                        </td>
+                        <td>
+                            <%=payment.firstname%>
+                        </td>
+                        <td>
+                            <%=payment.email%>
+                        </td>
+                        <td>
+                            <%=payment.amount%>
+                        </td>
+                        <td>
+                            <%=payment.payuMoneyId%>
+                        </td>
+                        <td>
+                            <%=payment.mode%>
+                        </td>
+                        <td>
+                            <%=payment.addedon%>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <a href="/" class="btn btn-primary mt-2" title="Home">Home</a>
+        </div>
+    </div>
+</div>
+<% include ./partials/footer %>

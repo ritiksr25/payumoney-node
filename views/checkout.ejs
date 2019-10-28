@@ -1,0 +1,124 @@
+<% include ./partials/head %>
+
+<h1>Welcome to Pay U Money Sample!!</h1>
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card mt-4 mx-auto">
+            <h4>Enter the Details: </h4>
+            <form action="#" id="payment_form">
+                <input type="hidden" id="udf5" name="udf5" value="<%=data.message%>" />
+                <input type="hidden" id="surl" name="surl" value="<%=data.surl%>" />
+                <input type="hidden" id="furl" name="furl" value="<%=data.furl%>" />
+                <input type="hidden" id="key" name="key" placeholder="Merchant Key" value="<%=data.key%>" />
+                <input type="hidden" id="salt" name="salt" placeholder="Salt" value="<%=data.salt%>" />
+                <input type="hidden" id="hash" name="hash" placeholder="Hash" value="" />
+
+                <div class="dv">
+                    <span class="text"><label>Transaction/Order ID:</label></span>
+                    <span><input type="text" id="txnid" name="txnid" placeholder="Transaction ID" value="" /></span>
+                </div>
+
+                <div class="dv">
+                    <span class="text"><label>Amount:</label></span>
+                    <span><input type="text" id="amount" name="amount" placeholder="Amount" value="" /></span>
+                </div>
+
+                <div class="dv">
+                    <span class="text"><label>Product Info:</label></span>
+                    <span><input type="text" id="pinfo" name="productinfo" placeholder="Product Info" value="" /></span>
+                </div>
+
+                <div class="dv">
+                    <span class="text"><label>Name:</label></span>
+                    <span><input type="text" id="fname" name="firstname" placeholder="First Name" value="" /></span>
+                </div>
+
+                <div class="dv">
+                    <span class="text"><label>Email ID:</label></span>
+                    <span><input type="text" id="email" name="email" placeholder="Email ID" value="" /></span>
+                </div>
+
+                <div class="dv">
+                    <span class="text"><label>Mobile Number:</label></span>
+                    <span><input type="text" id="mobile" name="phone" placeholder="Mobile/Cell Number"
+                            value="" /></span>
+                </div>
+
+                <div id="alertinfo" class="dv"></div>
+
+                <div><input type="submit" class="btn btn-primary mt-2" value="Pay" onclick="launchBOLT(); return false;" /></div>
+                <div><a href="/payments" class="btn btn-secondary mt-2" title="history">Payment History</a></div>
+            </form>
+        </div>
+
+        <script type="text/javascript">
+            $('#payment_form').bind('keyup blur', function () {
+                $.ajax({
+                    url: 'http://localhost:5000',
+                    type: 'post',
+                    data: JSON.stringify({
+                        txnid: $('#txnid').val(),
+                        amount: $('#amount').val(),
+                        productinfo: $('#productinfo').val(),
+                        firstname: $('#firstname').val(),
+                        email: $('#email').val(),
+                        phone: $('#phone').val(),
+                    }),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#hash').val(data.hash);
+                    }
+                });
+            });
+
+        </script>
+        <script type="text/javascript">
+            function launchBOLT() {
+                bolt.launch({
+                    key: $('#key').val(),
+                    txnid: $('#txnid').val(),
+                    hash: $('#hash').val(),
+                    amount: $('#amount').val(),
+                    firstname: $('#firstname').val(),
+                    email: $('#email').val(),
+                    phone: $('#phone').val(),
+                    productinfo: $('#productinfo').val(),
+                    udf5: $('#udf5').val(),
+                    surl: $('#surl').val(),
+                    furl: $('#furl').val(),
+                    mode: "dropout"
+                }, {
+                    responseHandler: function (BOLT) {
+                        if (BOLT.response.txnStatus != 'CANCEL') {
+                            //Salt is passd here for demo purpose only. For practical use keep salt at server side only.
+                            var fr = '<form action=\"' + $('#surl').val() + '\" method=\"post\">' +
+                                '<input type=\"hidden\" name=\"key\" value=\"' + BOLT.response.key + '\" />' +
+                                '<input type=\"hidden\" name=\"salt\" value=\"' + $('#salt').val() + '\" />' +
+                                '<input type=\"hidden\" name=\"txnid\" value=\"' + BOLT.response.txnid + '\" />' +
+                                '<input type=\"hidden\" name=\"amount\" value=\"' + BOLT.response.amount + '\" />' +
+                                '<input type=\"hidden\" name=\"productinfo\" value=\"' + BOLT.response.productinfo + '\" />' +
+                                '<input type=\"hidden\" name=\"firstname\" value=\"' + BOLT.response.firstname + '\" />' +
+                                '<input type=\"hidden\" name=\"email\" value=\"' + BOLT.response.email + '\" />' +
+                                '<input type=\"hidden\" name=\"udf5\" value=\"' + BOLT.response.udf5 + '\" />' +
+                                '<input type=\"hidden\" name=\"mihpayid\" value=\"' + BOLT.response.mihpayid + '\" />' +
+                                '<input type=\"hidden\" name=\"status\" value=\"' + BOLT.response.status + '\" />' +
+                                '<input type=\"hidden\" name=\"hash\" value=\"' + BOLT.response.hash + '\" />' +
+                                '</form>';
+                            var form = jQuery(fr);
+                            jQuery('body').append(form);
+                            form.submit();
+                        }
+                    },
+                    catchException: function (BOLT) {
+                        alert(BOLT.message);
+                    }
+                });
+            }
+        //--
+        </script>
+    </div>
+</div>
+</div>
+
+<% include ./partials/footer %>
